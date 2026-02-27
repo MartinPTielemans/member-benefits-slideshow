@@ -62,3 +62,21 @@ test('parseBenefitsHtml excludes all benefits under group-only section', () => {
   assert.equal(items[0].title, 'Gyldig individuel fordel A');
   assert.equal(items[1].title, 'Gyldig individuel fordel B');
 });
+
+test('parseBenefitsHtml keeps full description across multiple paragraphs', () => {
+  const html = `
+    <h3>Aalborg Pirates</h3>
+    <p>Få 70% besparelse på</p>
+    <p>oprettelsgebyr for sæsonkort.</p>
+    <p>Rabatten kan findes på medlemssiden.</p>
+    <a href="/aalborg-pirates">Læs mere</a>
+  `;
+
+  const items = parseBenefitsHtml(html, 'https://www.studentersamfundet.dk/medlemsfordele');
+
+  assert.equal(items.length, 1);
+  assert.equal(
+    items[0].description,
+    'Få 70% besparelse på oprettelsgebyr for sæsonkort. Rabatten kan findes på medlemssiden.'
+  );
+});
