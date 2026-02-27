@@ -7,9 +7,11 @@ import {
 } from '/lib/slideshow.js';
 
 const app = document.querySelector('#app');
-const slideIntervalMs = toIntervalMs('10');
-const refreshIntervalMs = toRefreshMs('20');
+let slideIntervalMs = toIntervalMs('10');
+let refreshIntervalMs = toRefreshMs('20');
 const interactionPauseMs = 12_000;
+let autoTimer = null;
+let refreshTimer = null;
 
 const state = {
   items: [],
@@ -35,6 +37,15 @@ function formatTime(iso) {
   }).format(date);
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
 function getProgressPercent() {
   const elapsed = Date.now() - state.lastAdvanceAt;
   return Math.min(100, Math.round((elapsed / slideIntervalMs) * 100));
@@ -45,7 +56,7 @@ function renderEmpty(message) {
     <section class="empty">
       <div>
         <h1>Member Benefits</h1>
-        <p>${message}</p>
+        <p>${escapeHtml(message)}</p>
       </div>
     </section>
   `;
@@ -58,15 +69,20 @@ function render() {
   }
 
   const item = state.items[state.currentIndex];
-  const imageStyle = item.image ? `style="background-image: url('${item.image}')"` : '';
+  const imageStyle = item.image
+    ? `style="background-image: url('${escapeHtml(item.image)}')"`
+    : '';
+  const safeTitle = escapeHtml(item.title);
+  const safeDescription = escapeHtml(item.description);
+  const safeLink = item.link ? escapeHtml(item.link) : '';
 
   app.innerHTML = `
     <section class="slide" id="slide">
       <div class="slide-copy">
         <p class="slide-index">Benefit ${state.currentIndex + 1} of ${state.items.length}</p>
-        <h1>${item.title}</h1>
-        <p>${item.description}</p>
-        ${item.link ? `<a href="${item.link}" target="_blank" rel="noreferrer">Open Offer</a>` : ''}
+        <h1>${safeTitle}</h1>
+        <p>${safeDescription}</p>
+        ${item.link ? `<a href="${safeLink}" target="_blank" rel="noreferrer">Open Offer</a>` : ''}
       </div>
       <div class="slide-media" ${imageStyle}></div>
     </section>
@@ -172,6 +188,20 @@ async function refreshBenefits() {
     state.updatedAt = payload.updatedAt;
     state.stale = Boolean(payload.stale);
     state.error = '';
+
+    if (payload.config) {
+      const nextSlideIntervalMs = toIntervalMs(String(payload.config.slideIntervalSeconds));
+      const nextRefreshIntervalMs = toRefreshMs(String(payload.config.refreshIntervalMinutes));
+      const refreshChanged = nextRefreshIntervalMs !== refreshIntervalMs;
+
+      slideIntervalMs = nextSlideIntervalMs;
+      refreshIntervalMs = nextRefreshIntervalMs;
+
+      if (refreshChanged) {
+        startRefreshLoop();
+      }
+    }
+
     render();
   } catch (error) {
     state.error = error instanceof Error ? error.message : 'Unable to refresh benefits';
@@ -180,7 +210,11 @@ async function refreshBenefits() {
 }
 
 function startAutoAdvance() {
-  setInterval(() => {
+  if (autoTimer) {
+    clearInterval(autoTimer);
+  }
+
+  autoTimer = setInterval(() => {
     if (!state.items.length) {
       return;
     }
@@ -201,7 +235,11 @@ function startAutoAdvance() {
 }
 
 function startRefreshLoop() {
-  setInterval(() => {
+  if (refreshTimer) {
+    clearInterval(refreshTimer);
+  }
+
+  refreshTimer = setInterval(() => {
     refreshBenefits();
   }, refreshIntervalMs);
 }

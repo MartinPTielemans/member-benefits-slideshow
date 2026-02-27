@@ -3,6 +3,22 @@ import { getCachedBenefits, setCachedBenefits } from '../lib/cache.js';
 
 export const SOURCE_URL = 'https://www.studentersamfundet.dk/medlemsfordele';
 
+function parsePositiveInt(raw, fallback, minimum) {
+  const parsed = Number.parseInt(raw ?? '', 10);
+  if (!Number.isFinite(parsed)) {
+    return fallback;
+  }
+
+  return Math.max(minimum, parsed);
+}
+
+function getRuntimeConfig() {
+  return {
+    slideIntervalSeconds: parsePositiveInt(process.env.SLIDE_INTERVAL_SECONDS, 10, 3),
+    refreshIntervalMinutes: parsePositiveInt(process.env.REFRESH_INTERVAL_MINUTES, 20, 5)
+  };
+}
+
 async function fetchSourceHtml(fetchImpl) {
   const response = await fetchImpl(SOURCE_URL, {
     headers: {
@@ -22,6 +38,7 @@ function buildPayload(items, now) {
     items,
     updatedAt: new Date(now()).toISOString(),
     sourceUrl: SOURCE_URL,
+    config: getRuntimeConfig(),
     stale: false
   };
 }
