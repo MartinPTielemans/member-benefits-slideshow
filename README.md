@@ -5,7 +5,7 @@ iPad-first fullscreen slideshow that pulls live member benefits from:
 
 ## What it does
 - Fetches live benefits through `/api/benefits`
-- Shows benefits in branded pages of 2 cards (last page can show 1 card)
+- Shows benefits in branded pages of 4 cards (last page can show 1-3 cards)
 - Auto-rotates pages (default 10 seconds)
 - Supports tap and swipe navigation
 - Falls back to cached data if upstream source fails

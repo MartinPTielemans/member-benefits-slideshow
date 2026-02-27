@@ -42,6 +42,17 @@ test('paginateItems groups benefits into pages of two with odd remainder', () =>
   );
 });
 
+test('paginateItems defaults to four cards per page', () => {
+  const items = [{ id: 'a' }, { id: 'b' }, { id: 'c' }, { id: 'd' }, { id: 'e' }];
+  const pages = paginateItems(items);
+
+  assert.equal(pages.length, 2);
+  assert.deepEqual(
+    pages.map((page) => page.map((item) => item.id)),
+    [['a', 'b', 'c', 'd'], ['e']]
+  );
+});
+
 test('canAutoAdvance pauses briefly after interaction', () => {
   const pauseMs = 12_000;
 

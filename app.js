@@ -10,6 +10,7 @@ import {
 const app = document.querySelector('#app');
 let slideIntervalMs = toIntervalMs('10');
 let refreshIntervalMs = toRefreshMs('20');
+const pageSize = 4;
 const interactionPauseMs = 12_000;
 let autoTimer = null;
 let refreshTimer = null;
@@ -66,13 +67,12 @@ function renderEmpty(message) {
 }
 
 function renderCards(pageItems) {
-  const pageStartIndex = state.currentPageIndex * 2;
+  const pageStartIndex = state.currentPageIndex * pageSize;
 
   return pageItems
     .map((item, offset) => {
       const safeTitle = escapeHtml(item.title);
       const safeDescription = escapeHtml(item.description);
-      const safeLink = item.link ? escapeHtml(item.link) : '';
       const number = pageStartIndex + offset + 1;
 
       return `
@@ -80,11 +80,6 @@ function renderCards(pageItems) {
           <p class="benefit-number">Fordel ${number}</p>
           <h2>${safeTitle}</h2>
           <p>${safeDescription}</p>
-          ${
-            item.link
-              ? `<a href="${safeLink}" target="_blank" rel="noreferrer">Åbn medlemsbevis</a>`
-              : '<span class="no-link">Se medlemsside for detaljer</span>'
-          }
         </article>
       `;
     })
@@ -209,7 +204,7 @@ async function refreshBenefits() {
     }
 
     state.items = payload.items;
-    state.pages = paginateItems(payload.items, 2);
+    state.pages = paginateItems(payload.items, pageSize);
     state.currentPageIndex = Math.min(state.currentPageIndex, Math.max(0, state.pages.length - 1));
     state.updatedAt = payload.updatedAt;
     state.stale = Boolean(payload.stale);

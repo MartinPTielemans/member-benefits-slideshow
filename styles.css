@@ -1,10 +1,10 @@
 :root {
-  --ss-green: #8cc63f;
-  --ss-green-dark: #6fa431;
-  --ss-navy: #0b2438;
-  --ss-navy-deep: #071a2a;
-  --ss-ink: #f4f8fc;
-  --ss-muted: #c8d7e3;
+  --ss-green: #145014;
+  --ss-green-dark: #0a280a;
+  --ss-navy: #333230;
+  --ss-navy-deep: #282620;
+  --ss-ink: #fffaf1;
+  --ss-muted: #ccc8c1;
   --ss-danger: #ff9c85;
 }
 
@@ -22,8 +22,8 @@ body {
   font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: var(--ss-ink);
   background:
-    radial-gradient(120vw 80vh at -10% -20%, #6ca43144, transparent 60%),
-    radial-gradient(80vw 70vh at 120% 0%, #8cc63f33, transparent 60%),
+    radial-gradient(120vw 80vh at -10% -20%, #7ea87e44, transparent 60%),
+    radial-gradient(80vw 70vh at 120% 0%, #acd3ac33, transparent 60%),
     linear-gradient(135deg, var(--ss-navy), var(--ss-navy-deep));
 }
 
@@ -73,7 +73,7 @@ body {
 }
 
 .benefit-card {
-  background: linear-gradient(160deg, #113550f2, #0b2940f7);
+  background: linear-gradient(160deg, #3b3a35f2, #2b2a25f7);
   border: 1px solid #ffffff1f;
   border-left: 5px solid var(--ss-green);
   border-radius: 1rem;
@@ -95,31 +95,15 @@ body {
 
 .benefit-card h2 {
   margin: 0;
-  font-size: clamp(1.5rem, 2.7vw, 2.35rem);
-  line-height: 1.07;
+  font-size: clamp(1.35rem, 2.1vw, 2rem);
+  line-height: 1.12;
 }
 
 .benefit-card p {
   margin: 0;
-  color: #e8f1f8;
-  font-size: clamp(1rem, 1.5vw, 1.3rem);
-  line-height: 1.38;
-}
-
-.benefit-card a {
-  text-decoration: none;
-  width: fit-content;
-  padding: 0.65rem 0.95rem;
-  border-radius: 0.68rem;
-  background: linear-gradient(90deg, var(--ss-green), #b3e370);
-  color: #153715;
-  font-weight: 800;
-  font-size: clamp(0.95rem, 1.25vw, 1.05rem);
-}
-
-.no-link {
-  color: var(--ss-muted);
-  font-style: italic;
+  color: #f4efe4;
+  font-size: clamp(0.98rem, 1.25vw, 1.2rem);
+  line-height: 1.34;
 }
 
 .controls {
