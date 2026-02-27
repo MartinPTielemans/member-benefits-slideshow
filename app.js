@@ -1,6 +1,7 @@
 import {
   getNextIndex,
   getPrevIndex,
+  paginateItems,
   canAutoAdvance,
   toIntervalMs,
   toRefreshMs
@@ -15,7 +16,8 @@ let refreshTimer = null;
 
 const state = {
   items: [],
-  currentIndex: 0,
+  pages: [],
+  currentPageIndex: 0,
   updatedAt: null,
   stale: false,
   error: '',
@@ -55,47 +57,70 @@ function renderEmpty(message) {
   app.innerHTML = `
     <section class="empty">
       <div>
-        <h1>Member Benefits</h1>
+        <p class="brand-chip">STUDENTERSAMFUNDET</p>
+        <h1>Medlemsfordele</h1>
         <p>${escapeHtml(message)}</p>
       </div>
     </section>
   `;
 }
 
+function renderCards(pageItems) {
+  const pageStartIndex = state.currentPageIndex * 2;
+
+  return pageItems
+    .map((item, offset) => {
+      const safeTitle = escapeHtml(item.title);
+      const safeDescription = escapeHtml(item.description);
+      const safeLink = item.link ? escapeHtml(item.link) : '';
+      const number = pageStartIndex + offset + 1;
+
+      return `
+        <article class="benefit-card">
+          <p class="benefit-number">Fordel ${number}</p>
+          <h2>${safeTitle}</h2>
+          <p>${safeDescription}</p>
+          ${
+            item.link
+              ? `<a href="${safeLink}" target="_blank" rel="noreferrer">Åbn medlemsbevis</a>`
+              : '<span class="no-link">Se medlemsside for detaljer</span>'
+          }
+        </article>
+      `;
+    })
+    .join('');
+}
+
 function render() {
-  if (!state.items.length) {
-    renderEmpty(state.error || 'No benefits available right now.');
+  if (!state.pages.length) {
+    renderEmpty(state.error || 'Ingen fordele tilgængelige lige nu.');
     return;
   }
 
-  const item = state.items[state.currentIndex];
-  const imageStyle = item.image
-    ? `style="background-image: url('${escapeHtml(item.image)}')"`
-    : '';
-  const safeTitle = escapeHtml(item.title);
-  const safeDescription = escapeHtml(item.description);
-  const safeLink = item.link ? escapeHtml(item.link) : '';
+  const pageItems = state.pages[state.currentPageIndex];
 
   app.innerHTML = `
-    <section class="slide" id="slide">
-      <div class="slide-copy">
-        <p class="slide-index">Benefit ${state.currentIndex + 1} of ${state.items.length}</p>
-        <h1>${safeTitle}</h1>
-        <p>${safeDescription}</p>
-        ${item.link ? `<a href="${safeLink}" target="_blank" rel="noreferrer">Open Offer</a>` : ''}
+    <header class="brand">
+      <div>
+        <p class="brand-chip">STUDENTERSAMFUNDET</p>
+        <h1>Medlemsfordele</h1>
       </div>
-      <div class="slide-media" ${imageStyle}></div>
+      <p class="page-label">Side ${state.currentPageIndex + 1} af ${state.pages.length}</p>
+    </header>
+
+    <section class="page" id="page">
+      ${renderCards(pageItems)}
     </section>
 
     <section class="controls">
-      <button type="button" id="prev" aria-label="Previous slide">‹</button>
+      <button type="button" id="prev" aria-label="Previous page">‹</button>
       <div class="status"><div class="status-progress" style="width:${getProgressPercent()}%"></div></div>
-      <button type="button" id="next" aria-label="Next slide">›</button>
+      <button type="button" id="next" aria-label="Next page">›</button>
     </section>
 
     <section class="footer">
-      <span>Last updated: ${formatTime(state.updatedAt)} ${state.stale ? '(cached)' : ''}</span>
-      <span class="${state.error ? 'error' : ''}">${state.error || 'Live sync active'}</span>
+      <span>Sidst opdateret: ${formatTime(state.updatedAt)} ${state.stale ? '(cache)' : ''}</span>
+      <span class="${state.error ? 'error' : ''}">${state.error || 'Live synkronisering aktiv'}</span>
     </section>
   `;
 
@@ -106,12 +131,12 @@ function markInteraction() {
   state.lastInteractionAt = Date.now();
 }
 
-function nextSlide(userInitiated = false) {
-  if (!state.items.length) {
+function nextPage(userInitiated = false) {
+  if (!state.pages.length) {
     return;
   }
 
-  state.currentIndex = getNextIndex(state.currentIndex, state.items.length);
+  state.currentPageIndex = getNextIndex(state.currentPageIndex, state.pages.length);
   if (userInitiated) {
     markInteraction();
   }
@@ -119,12 +144,12 @@ function nextSlide(userInitiated = false) {
   render();
 }
 
-function prevSlide(userInitiated = false) {
-  if (!state.items.length) {
+function prevPage(userInitiated = false) {
+  if (!state.pages.length) {
     return;
   }
 
-  state.currentIndex = getPrevIndex(state.currentIndex, state.items.length);
+  state.currentPageIndex = getPrevIndex(state.currentPageIndex, state.pages.length);
   if (userInitiated) {
     markInteraction();
   }
@@ -135,17 +160,17 @@ function prevSlide(userInitiated = false) {
 function attachInteractionHandlers() {
   const prevButton = document.querySelector('#prev');
   const nextButton = document.querySelector('#next');
-  const slide = document.querySelector('#slide');
+  const page = document.querySelector('#page');
 
-  prevButton?.addEventListener('click', () => prevSlide(true));
-  nextButton?.addEventListener('click', () => nextSlide(true));
+  prevButton?.addEventListener('click', () => prevPage(true));
+  nextButton?.addEventListener('click', () => nextPage(true));
 
-  if (!slide) {
+  if (!page) {
     return;
   }
 
   let touchStartX = 0;
-  slide.addEventListener(
+  page.addEventListener(
     'touchstart',
     (event) => {
       touchStartX = event.touches[0].clientX;
@@ -153,7 +178,7 @@ function attachInteractionHandlers() {
     { passive: true }
   );
 
-  slide.addEventListener(
+  page.addEventListener(
     'touchend',
     (event) => {
       const deltaX = event.changedTouches[0].clientX - touchStartX;
@@ -162,9 +187,9 @@ function attachInteractionHandlers() {
       }
 
       if (deltaX < 0) {
-        nextSlide(true);
+        nextPage(true);
       } else {
-        prevSlide(true);
+        prevPage(true);
       }
     },
     { passive: true }
@@ -184,7 +209,8 @@ async function refreshBenefits() {
     }
 
     state.items = payload.items;
-    state.currentIndex = Math.min(state.currentIndex, state.items.length - 1);
+    state.pages = paginateItems(payload.items, 2);
+    state.currentPageIndex = Math.min(state.currentPageIndex, Math.max(0, state.pages.length - 1));
     state.updatedAt = payload.updatedAt;
     state.stale = Boolean(payload.stale);
     state.error = '';
@@ -215,7 +241,7 @@ function startAutoAdvance() {
   }
 
   autoTimer = setInterval(() => {
-    if (!state.items.length) {
+    if (!state.pages.length) {
       return;
     }
 
@@ -226,7 +252,7 @@ function startAutoAdvance() {
     }
 
     if (now - state.lastAdvanceAt >= slideIntervalMs) {
-      nextSlide(false);
+      nextPage(false);
       return;
     }
 
@@ -244,7 +270,7 @@ function startRefreshLoop() {
   }, refreshIntervalMs);
 }
 
-renderEmpty('Loading benefits...');
+renderEmpty('Indlæser medlemsfordele...');
 refreshBenefits();
 startAutoAdvance();
 startRefreshLoop();

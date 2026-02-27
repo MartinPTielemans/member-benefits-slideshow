@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {
   getNextIndex,
   getPrevIndex,
+  paginateItems,
   canAutoAdvance,
   toIntervalMs,
   toRefreshMs
@@ -17,6 +18,28 @@ test('getNextIndex wraps at the end', () => {
 test('getPrevIndex wraps at the beginning', () => {
   assert.equal(getPrevIndex(0, 5), 4);
   assert.equal(getPrevIndex(3, 5), 2);
+});
+
+test('paginateItems groups benefits into pages of two with odd remainder', () => {
+  const items = [
+    { id: 'a' },
+    { id: 'b' },
+    { id: 'c' },
+    { id: 'd' },
+    { id: 'e' }
+  ];
+
+  const pages = paginateItems(items, 2);
+
+  assert.equal(pages.length, 3);
+  assert.deepEqual(
+    pages.map((page) => page.map((item) => item.id)),
+    [
+      ['a', 'b'],
+      ['c', 'd'],
+      ['e']
+    ]
+  );
 });
 
 test('canAutoAdvance pauses briefly after interaction', () => {
