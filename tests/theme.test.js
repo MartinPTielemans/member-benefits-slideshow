@@ -9,6 +9,6 @@ test('brand theme matches Studentersamfundet primary palette and typography', ()
   assert.equal(BRAND_THEME.colors.textDark, '#333230');
   assert.equal(BRAND_THEME.fonts.brand, 'Days One');
   assert.equal(BRAND_THEME.fonts.ui, 'Poppins');
-  assert.equal(BRAND_THEME.tagline, 'Som medlem får du fordelene herunder');
+  assert.equal(BRAND_THEME.tagline, 'Som medlem af Studentersamfundet får du fordelene herunder');
   assert.equal(BRAND_THEME.logoPath, '/assets/studentersamfundet-logo.png');
 });
