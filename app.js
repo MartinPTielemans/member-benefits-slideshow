@@ -59,14 +59,11 @@ function renderEmpty(message) {
   app.innerHTML = `
     <section class="empty">
       <div>
-        <div class="brand-block identity">
+        <div class="brand-banner">
           <img src="${BRAND_THEME.logoPath}" alt="${BRAND_THEME.name} logo" class="brand-logo" />
-          <div class="brand-copy">
-            <p class="brand-name">${BRAND_THEME.name}</p>
-            <p class="brand-subtitle">${BRAND_THEME.subtitle}</p>
-            <p class="brand-tagline">${BRAND_THEME.tagline}</p>
-          </div>
+          <p class="brand-tagline">${BRAND_THEME.tagline}</p>
         </div>
+        <p class="brand-subline">${BRAND_THEME.name} · ${BRAND_THEME.subtitle}</p>
         <h1 class="page-title">Medlemsfordele</h1>
         <p>${escapeHtml(message)}</p>
       </div>
@@ -104,15 +101,14 @@ function render() {
 
   app.innerHTML = `
     <header class="brand">
-      <div class="brand-block identity">
+      <div class="brand-banner">
         <img src="${BRAND_THEME.logoPath}" alt="${BRAND_THEME.name} logo" class="brand-logo" />
-        <div class="brand-copy">
-          <p class="brand-name">${BRAND_THEME.name}</p>
-          <p class="brand-subtitle">${BRAND_THEME.subtitle}</p>
-          <p class="brand-tagline">${BRAND_THEME.tagline}</p>
-        </div>
+        <p class="brand-tagline">${BRAND_THEME.tagline}</p>
       </div>
-      <p class="page-label">Side ${state.currentPageIndex + 1} af ${state.pages.length}</p>
+      <div class="brand-meta">
+        <p class="brand-subline">${BRAND_THEME.name} · ${BRAND_THEME.subtitle}</p>
+        <p class="page-label">Side ${state.currentPageIndex + 1} af ${state.pages.length}</p>
+      </div>
     </header>
 
     <section class="page" id="page">
