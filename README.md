@@ -6,6 +6,7 @@ iPad-first fullscreen slideshow that pulls live member benefits from:
 ## What it does
 - Fetches live benefits through `/api/benefits`
 - Shows benefits in branded pages of 4 cards (last page can show 1-3 cards)
+- Uses Studentersamfundet color palette, typography, and official logo in the header
 - Auto-rotates pages (default 10 seconds)
 - Supports tap and swipe navigation
 - Falls back to cached data if upstream source fails

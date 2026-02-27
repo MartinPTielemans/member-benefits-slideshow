@@ -6,6 +6,7 @@ import {
   toIntervalMs,
   toRefreshMs
 } from '/lib/slideshow.js';
+import { BRAND_THEME } from '/lib/theme.js';
 
 const app = document.querySelector('#app');
 let slideIntervalMs = toIntervalMs('10');
@@ -58,8 +59,14 @@ function renderEmpty(message) {
   app.innerHTML = `
     <section class="empty">
       <div>
-        <p class="brand-chip">STUDENTERSAMFUNDET</p>
-        <h1>Medlemsfordele</h1>
+        <div class="brand-block identity">
+          <img src="${BRAND_THEME.logoPath}" alt="${BRAND_THEME.name} logo" class="brand-logo" />
+          <div class="brand-copy">
+            <p class="brand-name">${BRAND_THEME.name}</p>
+            <p class="brand-subtitle">${BRAND_THEME.subtitle}</p>
+          </div>
+        </div>
+        <h1 class="page-title">Medlemsfordele</h1>
         <p>${escapeHtml(message)}</p>
       </div>
     </section>
@@ -96,9 +103,12 @@ function render() {
 
   app.innerHTML = `
     <header class="brand">
-      <div>
-        <p class="brand-chip">STUDENTERSAMFUNDET</p>
-        <h1>Medlemsfordele</h1>
+      <div class="brand-block identity">
+        <img src="${BRAND_THEME.logoPath}" alt="${BRAND_THEME.name} logo" class="brand-logo" />
+        <div class="brand-copy">
+          <p class="brand-name">${BRAND_THEME.name}</p>
+          <p class="brand-subtitle">${BRAND_THEME.subtitle}</p>
+        </div>
       </div>
       <p class="page-label">Side ${state.currentPageIndex + 1} af ${state.pages.length}</p>
     </header>

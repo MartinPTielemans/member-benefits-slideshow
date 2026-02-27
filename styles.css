@@ -1,10 +1,14 @@
 :root {
   --ss-green: #145014;
   --ss-green-dark: #0a280a;
-  --ss-navy: #333230;
-  --ss-navy-deep: #282620;
-  --ss-ink: #fffaf1;
-  --ss-muted: #ccc8c1;
+  --ss-emerald: #3f7652;
+  --ss-tint: #7ea87e;
+  --ss-pale: #acd3ac;
+  --ss-cream: #fffaf1;
+  --ss-ink: #333230;
+  --ss-muted: #666460;
+  --ss-line: #d7d1c9;
+  --ss-panel: #ffffff;
   --ss-danger: #ff9c85;
 }
 
@@ -19,12 +23,12 @@ body {
 }
 
 body {
-  font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Poppins", "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: var(--ss-ink);
   background:
-    radial-gradient(120vw 80vh at -10% -20%, #7ea87e44, transparent 60%),
-    radial-gradient(80vw 70vh at 120% 0%, #acd3ac33, transparent 60%),
-    linear-gradient(135deg, var(--ss-navy), var(--ss-navy-deep));
+    radial-gradient(110vw 80vh at 0% -20%, #acd3ac55, transparent 60%),
+    radial-gradient(85vw 70vh at 100% 0%, #7ea87e33, transparent 60%),
+    linear-gradient(180deg, #fffdf8, var(--ss-cream));
 }
 
 .app {
@@ -38,31 +42,54 @@ body {
 .brand {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   gap: 1rem;
+  border-bottom: 1px solid var(--ss-line);
+  padding-bottom: 0.75rem;
 }
 
-.brand-chip {
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.brand-logo {
+  width: clamp(54px, 5.2vw, 74px);
+  height: auto;
+  object-fit: contain;
+}
+
+.brand-copy {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.brand-name {
   margin: 0;
-  display: inline-block;
-  padding: 0.3rem 0.6rem;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--ss-green), #a2da5a);
-  color: #1a3b1a;
-  font-size: clamp(0.7rem, 1.1vw, 0.9rem);
-  letter-spacing: 0.08em;
-  font-weight: 800;
+  color: var(--ss-green);
+  font-family: "Days One", "Poppins", sans-serif;
+  letter-spacing: 0.01em;
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  line-height: 1.02;
 }
 
-.brand h1 {
-  margin: 0.45rem 0 0;
-  font-size: clamp(1.6rem, 3.2vw, 2.8rem);
+.brand-subtitle {
+  margin: 0;
+  color: var(--ss-green);
+  font-weight: 600;
+  font-size: clamp(0.96rem, 1.4vw, 1.35rem);
+}
+
+.page-title {
+  margin: 0.5rem 0 0;
+  font-size: clamp(1.45rem, 2.4vw, 2rem);
 }
 
 .page-label {
   margin: 0;
-  color: var(--ss-muted);
-  font-weight: 700;
+  color: var(--ss-emerald);
+  font-weight: 600;
   font-size: clamp(0.95rem, 1.4vw, 1.2rem);
 }
 
@@ -73,12 +100,12 @@ body {
 }
 
 .benefit-card {
-  background: linear-gradient(160deg, #3b3a35f2, #2b2a25f7);
-  border: 1px solid #ffffff1f;
+  background: linear-gradient(165deg, #ffffff, #f8f4ee);
+  border: 1px solid var(--ss-line);
   border-left: 5px solid var(--ss-green);
   border-radius: 1rem;
   padding: clamp(1rem, 2.3vw, 1.8rem);
-  box-shadow: 0 12px 32px #04131f73;
+  box-shadow: 0 10px 24px #1d2c1a14;
   display: grid;
   align-content: start;
   gap: 0.8rem;
@@ -86,11 +113,11 @@ body {
 
 .benefit-number {
   margin: 0;
-  color: var(--ss-muted);
+  color: var(--ss-emerald);
   font-size: clamp(0.8rem, 1.1vw, 0.95rem);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .benefit-card h2 {
@@ -101,7 +128,7 @@ body {
 
 .benefit-card p {
   margin: 0;
-  color: #f4efe4;
+  color: #4a4944;
   font-size: clamp(0.98rem, 1.25vw, 1.2rem);
   line-height: 1.34;
 }
@@ -115,9 +142,9 @@ body {
 
 .controls button {
   appearance: none;
-  border: 1px solid #ffffff21;
-  background: #ffffff12;
-  color: var(--ss-ink);
+  border: 1px solid #14501430;
+  background: #ffffffd9;
+  color: var(--ss-green);
   border-radius: 999px;
   width: 3rem;
   height: 3rem;
@@ -125,19 +152,19 @@ body {
 }
 
 .status {
-  background: #0b2334cf;
+  background: #e7e2da;
   border-radius: 999px;
   height: 0.5rem;
   position: relative;
   overflow: hidden;
-  border: 1px solid #ffffff1f;
+  border: 1px solid #dad4cb;
 }
 
 .status-progress {
   position: absolute;
   inset: 0 auto 0 0;
   width: 0;
-  background: linear-gradient(90deg, var(--ss-green), #73d6bf);
+  background: linear-gradient(90deg, var(--ss-green), var(--ss-emerald));
   transition: width 0.35s linear;
 }
 
