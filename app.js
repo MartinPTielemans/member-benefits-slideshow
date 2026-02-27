@@ -64,6 +64,7 @@ function renderEmpty(message) {
           <div class="brand-copy">
             <p class="brand-name">${BRAND_THEME.name}</p>
             <p class="brand-subtitle">${BRAND_THEME.subtitle}</p>
+            <p class="brand-tagline">${BRAND_THEME.tagline}</p>
           </div>
         </div>
         <h1 class="page-title">Medlemsfordele</h1>
@@ -108,6 +109,7 @@ function render() {
         <div class="brand-copy">
           <p class="brand-name">${BRAND_THEME.name}</p>
           <p class="brand-subtitle">${BRAND_THEME.subtitle}</p>
+          <p class="brand-tagline">${BRAND_THEME.tagline}</p>
         </div>
       </div>
       <p class="page-label">Side ${state.currentPageIndex + 1} af ${state.pages.length}</p>

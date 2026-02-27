@@ -81,6 +81,13 @@ body {
   font-size: clamp(0.96rem, 1.4vw, 1.35rem);
 }
 
+.brand-tagline {
+  margin: 0;
+  color: var(--ss-muted);
+  font-weight: 500;
+  font-size: clamp(0.86rem, 1.1vw, 1rem);
+}
+
 .page-title {
   margin: 0.5rem 0 0;
   font-size: clamp(1.45rem, 2.4vw, 2rem);
